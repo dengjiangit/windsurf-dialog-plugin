@@ -1,0 +1,68 @@
+{
+  "name": "niuma-assistant",
+  "displayName": "🐮🐎助手 - AI 持久输出",
+  "description": "AI结束前自动弹窗确认，支持图片上传和历史记录，开源免费版",
+  "version": "1.0.8",
+  "publisher": "windsurf-community",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "niuma-panel",
+          "title": "🐮🐎助手",
+          "icon": "icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "niuma-panel": [
+        {
+          "type": "webview",
+          "id": "niuma.statusPanel",
+          "name": "状态面板"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Windsurf 对话助手",
+      "properties": {
+        "windsurfDialog.historyEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否启用历史记录功能"
+        },
+        "windsurfDialog.portRange": {
+          "type": "object",
+          "default": {
+            "start": 13500,
+            "end": 13999
+          },
+          "description": "HTTP 服务端口范围"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "vsce": "^2.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-repo/windsurf-dialog-assistant"
+  },
+  "license": "MIT"
+}
