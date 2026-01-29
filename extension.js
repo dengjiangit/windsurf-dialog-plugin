@@ -1088,6 +1088,15 @@ ${triggerCommand}
                 const uri = vscode.Uri.file(this._historyDir);
                 vscode.commands.executeCommand('revealFileInOS', uri);
                 break;
+              case 'clearAllHistory':
+                // 清除所有历史记录
+                this._clearAllHistory();
+                vscode.window.showInformationMessage('✅ 历史记录已清除');
+                // 刷新状态面板
+                if (this._statusView) {
+                  this._statusView.webview.html = this._getStatusPanelHtml();
+                }
+                break;
             }
           });
           
@@ -1114,6 +1123,7 @@ ${triggerCommand}
     
     // 获取历史记录文件列表
     let historyHtml = '';
+    let historyFiles = [];
     try {
       if (fs.existsSync(this._historyDir)) {
         const files = fs.readdirSync(this._historyDir)
@@ -1123,22 +1133,29 @@ ${triggerCommand}
           .slice(0, 5); // 只显示最近5个
         
         if (files.length > 0) {
-          historyHtml = files.map(file => {
+          historyFiles = files.map(file => {
             const filePath = path.join(this._historyDir, file);
             const stats = fs.statSync(filePath);
             const size = (stats.size / 1024).toFixed(1);
-            return `<div class="history-item" onclick="openHistory('${filePath}')">
-              📄 ${file.replace('.md', '')} <span style="color: var(--vscode-descriptionForeground); font-size: 10px;">(${size}KB)</span>
+            return { file, filePath, size };
+          });
+          
+          historyHtml = historyFiles.map(item => {
+            // 转义路径中的特殊字符
+            const escapedPath = item.filePath.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            return `<div class="history-item" onclick="openHistory('${escapedPath}')">
+              📄 ${item.file.replace('.md', '')} <span style="color: var(--vscode-descriptionForeground); font-size: 10px;">(${item.size}KB)</span>
             </div>`;
           }).join('');
         } else {
-          historyHtml = '<div style="font-size: 11px; color: var(--vscode-descriptionForeground);">暂无历史记录</div>';
+          historyHtml = '<div style="font-size: 11px; color: var(--vscode-descriptionForeground); padding: 8px;">暂无历史记录</div>';
         }
       } else {
-        historyHtml = '<div style="font-size: 11px; color: var(--vscode-descriptionForeground);">暂无历史记录</div>';
+        historyHtml = '<div style="font-size: 11px; color: var(--vscode-descriptionForeground); padding: 8px;">历史目录不存在</div>';
       }
     } catch (e) {
-      historyHtml = '<div style="font-size: 11px; color: var(--vscode-descriptionForeground);">加载失败</div>';
+      console.error('[🐮🐎助手] 加载历史记录失败:', e);
+      historyHtml = `<div style="font-size: 11px; color: var(--vscode-descriptionForeground); padding: 8px;">加载失败: ${e.message}</div>`;
     }
     
     return `<!DOCTYPE html>
@@ -1222,6 +1239,13 @@ ${triggerCommand}
         .btn:hover {
             background: var(--vscode-button-hoverBackground);
         }
+        .btn-danger {
+            background: rgba(255,90,95,0.15);
+            color: var(--vscode-errorForeground);
+        }
+        .btn-danger:hover {
+            background: rgba(255,90,95,0.25);
+        }
     </style>
 </head>
 <body>
@@ -1292,6 +1316,12 @@ ${triggerCommand}
         
         function openHistoryFolder() {
             vscode.postMessage({ command: 'openHistoryFolder' });
+        }
+        
+        function clearAllHistory() {
+            if (confirm('确定要清除所有历史记录吗？此操作不可恢复！')) {
+                vscode.postMessage({ command: 'clearAllHistory' });
+            }
         }
     </script>
 </body>

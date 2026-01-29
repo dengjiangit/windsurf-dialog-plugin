@@ -2,7 +2,7 @@
   "name": "niuma-assistant",
   "displayName": "🐮🐎助手 - AI 持久输出",
   "description": "AI结束前自动弹窗确认，支持图片上传和历史记录，开源免费版",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "publisher": "windsurf-community",
   "icon": "icon.png",
   "engines": {
