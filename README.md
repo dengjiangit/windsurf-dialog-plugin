@@ -191,8 +191,8 @@ windsurf-dialog-plugin/
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/your-repo/windsurf-dialog-assistant
-cd windsurf-dialog-assistant
+git clone https://github.com/dengjiangit/windsurf-dialog-plugin
+cd windsurf-dialog-plugin
 
 # 2. 安装依赖
 npm install
@@ -256,10 +256,11 @@ MIT License - 完全开源免费
 - 基于：VS Code Extension API
 - 适配：Windsurf IDE
 
-## 📮 联系方式
+## 📮 反馈与支持
 
-- GitHub Issues: [提交问题](https://github.com/your-repo/windsurf-dialog-assistant/issues)
-- Email: your-email@example.com
+- **GitHub Issues**: [提交问题或建议](https://github.com/dengjiangit/windsurf-dialog-plugin/issues)
+- **GitHub Discussions**: [参与讨论](https://github.com/dengjiangit/windsurf-dialog-plugin/discussions)
+- **Star**: 如果这个项目对你有帮助，请给个 ⭐️
 
 ---
 
