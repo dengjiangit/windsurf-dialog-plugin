@@ -1350,6 +1350,57 @@ async function activate(context) {
       dispose: () => assistant.dispose()
     });
     
+    // 注册手动触发弹窗命令
+    const triggerCommand = vscode.commands.registerCommand('niuma.triggerDialog', async () => {
+      try {
+        const result = await assistant._collectFeedback('手动触发弹窗', assistant._currentSessionCalls + 1);
+        
+        if (result.action === 'continue') {
+          // 更新统计
+          assistant._stats.totalCalls++;
+          assistant._stats.continueCount++;
+          assistant._currentSessionCalls++;
+          assistant._saveStats();
+          
+          // 保存历史
+          assistant._saveInteraction(
+            assistant._currentSessionCalls,
+            '手动触发弹窗',
+            result.feedback || '',
+            'continue',
+            result.images ? result.images.length : 0
+          );
+          
+          // 显示用户反馈
+          if (result.feedback) {
+            vscode.window.showInformationMessage(`用户反馈: ${result.feedback}`);
+          }
+        } else {
+          // 更新统计
+          assistant._stats.totalCalls++;
+          assistant._stats.endCount++;
+          assistant._currentSessionCalls++;
+          assistant._saveStats();
+          
+          // 保存历史
+          assistant._saveInteraction(
+            assistant._currentSessionCalls,
+            '手动触发弹窗',
+            result.feedback || '',
+            'end',
+            result.images ? result.images.length : 0
+          );
+          
+          vscode.window.showInformationMessage('对话已结束');
+        }
+      } catch (error) {
+        console.error('[🐮🐎助手] 手动触发弹窗失败:', error);
+        vscode.window.showErrorMessage('触发弹窗失败: ' + error.message);
+      }
+    });
+    
+    context.subscriptions.push(triggerCommand);
+    
     // 等待 HTTP 服务器启动完成
     await new Promise(resolve => setTimeout(resolve, 500));
     

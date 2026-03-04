@@ -2,7 +2,7 @@
   "name": "niuma-assistant",
   "displayName": "🐮🐎助手 - AI 持久输出",
   "description": "AI结束前自动弹窗确认，支持图片上传和历史记录，开源免费版",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "publisher": "windsurf-community",
   "icon": "icon.png",
   "engines": {
@@ -34,6 +34,20 @@
         }
       ]
     },
+    "commands": [
+      {
+        "command": "niuma.triggerDialog",
+        "title": "🐮🐎助手: 手动触发弹窗"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "niuma.triggerDialog",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "editorTextFocus"
+      }
+    ],
     "configuration": {
       "title": "Windsurf 对话助手",
       "properties": {
